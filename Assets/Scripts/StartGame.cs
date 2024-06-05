@@ -6,12 +6,6 @@ using UnityEngine.UI;
 
 public class StartGame : MonoBehaviour
 {
-    private WaitForSeconds waitPanel;
-    private WaitForSeconds waitText;
-
-    public float timePanel;
-    public float timeText;
-
     public TMP_Text text;
     public Image panel;
     public float stepForAlpha;
@@ -21,13 +15,8 @@ public class StartGame : MonoBehaviour
     private Coroutine textCor;
     void Start()
     {
-        //Time.timeScale = 0;
         panelCor = StartCoroutine(Animation());
-    }
-
-    void Update()
-    {
-
+        text.gameObject.SetActive(true);
     }
 
     public IEnumerator Animation()
@@ -42,7 +31,7 @@ public class StartGame : MonoBehaviour
             if (panel.color.a <= 0)
             {
                 StopCoroutine(panelCor);
-                textCor = StartCoroutine(TextAnimation());
+                textCor = StartCoroutine(TextAnimation("How ITIS was born..."));
                 break;
             }
 
@@ -51,22 +40,28 @@ public class StartGame : MonoBehaviour
         yield return null;
     }
 
-    public IEnumerator TextAnimation()
+    public IEnumerator TextAnimation(string textText)
     {
+        text.text = textText;
         text.color = new Color(text.color.r, text.color.g, text.color.b, 1f);
         float alpha = 1f;
         while (text.color.a >= 0)
         {
-            alpha -= stepForAlpha * 2f;
+            alpha -= stepForAlpha;
             text.color = new Color(text.color.r, text.color.g, text.color.b, alpha);
 
             if (text.color.a <= 0)
             {
-                StopCoroutine(panelCor);
+                StopCoroutine(textCor);
             }
 
             yield return new WaitForSeconds(timeForUpdateAlpha);
         }
         yield return null;
+    }
+
+    public void TextAnim(string text)
+    {
+        textCor = StartCoroutine(TextAnimation(text));
     }
 }

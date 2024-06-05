@@ -12,6 +12,13 @@ public class SpawnSystem : MonoBehaviour
     private WaitForSeconds waitBtwEnemys;
     bool isStart = false;
 
+    public int countEnemies;
+    public int amoutAddCountEnemy;
+    private int alreadySpawned;
+    [SerializeField] private int wave = 0;
+    public float delayBetweenWaves;
+    public StartGame sg;
+
     void Start()
     {
         waitBtwEnemys = new WaitForSeconds(timeBtwEnemys);
@@ -24,21 +31,52 @@ public class SpawnSystem : MonoBehaviour
             if (!col.CompareTag("Player"))
                 return;
             isStart = true;
-            StartCoroutine(Spawn());
+            StartCoroutine(SpawnWaves());
         }
     }
 
-    IEnumerator Spawn()
+    //IEnumerator Spawn()
+    //{
+    //    while (true)
+    //    {
+    //        int rndmEnemy = Random.Range(0, enemys.Length);
+    //        int rndmPlace = Random.Range(0, places.Length);
+
+    //        var enemy = Instantiate(enemys[rndmEnemy], places[rndmPlace].position, Quaternion.identity);
+    //        enemy.transform.SetParent(transform);
+
+    //        yield return waitBtwEnemys;
+    //    }
+    //}
+
+    IEnumerator SpawnWaves()
     {
         while (true)
         {
-            int rndmEnemy = Random.Range(0, enemys.Length);
-            int rndmPlace = Random.Range(0, places.Length);
-
-            var enemy = Instantiate(enemys[rndmEnemy], places[rndmPlace].position, Quaternion.identity);
-            enemy.transform.SetParent(transform);
-
-            yield return waitBtwEnemys;
+            if (countEnemies >= alreadySpawned)
+            {
+                if (transform.childCount <= 0)
+                {
+                    wave++;
+                    countEnemies = 0;
+                    alreadySpawned += amoutAddCountEnemy;
+                    sg.TextAnim("Wave " + wave.ToString());
+                    yield return new WaitForSeconds(delayBetweenWaves);
+                }
+                else
+                {
+                    yield return null;
+                }
+            }
+            else
+            {
+                var a = Instantiate(enemys[UnityEngine.Random.Range(0, enemys.Length)],
+                    places[UnityEngine.Random.Range(0, places.Length)].transform.position,
+                    Quaternion.identity);
+                a.transform.SetParent(transform);
+                countEnemies++;
+                yield return waitBtwEnemys;
+            }
         }
     }
 }

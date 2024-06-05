@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 50
+  particles: {fileID: 5820949130596815979, guid: c88eee4f009c9f1438b926781da01351, type: 3}
 --- !u!61 &3521917906746008477
 BoxCollider2D:
   m_ObjectHideFlags: 0
